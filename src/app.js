@@ -30,7 +30,10 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // ROUTES
 const indexRuta = require("./routes/index");
+const authRuta = require ("./routes/auth")
 
 app.use("/", indexRuta);
+app.use("/auth", authRuta);
+
 
 module.exports = app;
