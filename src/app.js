@@ -31,12 +31,18 @@ app.use(express.static(path.join(__dirname, "public")));
 // ROUTES
 const indexRuta = require("./routes/index");
 const authRuta = require ("./routes/auth")
-const authRuta = require ("./routes/auth")
 const offersRuta = require("./routes/offers.js");
+
+const paymentRuta = require("./routes/payment");
+const articulosRuta = require("./routes/articulos.js");
+
+
 
 app.use("/", indexRuta);
 app.use("/auth", authRuta);
 app.use("/Payment", paymentRuta);
 app.use("/Offers", offersRuta);
+app.use("/articulos", articulosRuta);
+
 
 module.exports = app;
