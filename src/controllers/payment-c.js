@@ -1,16 +1,19 @@
 const Usuario = require("../models/user.js");
+const Compras = require("../models/compras.js");
+
 const { enviarEmail } = require("../scripts/nodemailer");
 
 class pagosController {
-  // Controlador para guardar una nueva Habitacion
+  // Controlador para guardar una nuevo pago
   agregarPago = async (req, res) => {
     try {
+        var fechaActual = new Date().toLocaleDateString();
 
+        // GENERA UN CODIGO RANDOM DE FACTUA
         function generateRandomCode() {
             const codeLength = 6;
             const codePrefix = 'F';
             const digits = '0123456789';
-          
             let code = codePrefix;
           
             for (let i = 0; i < codeLength - 1; i++) {
@@ -22,31 +25,68 @@ class pagosController {
         }
           
         const randomCode = generateRandomCode();
-
-          
         const datosCliente = req.body.clientData
+        const iduser = datosCliente.id
         const producto = req.body.productData
+        let monto_total = 0
         const productos = []
         productos[0] = producto
-        productos[1] = { nombreProducto: 'algo', cantidad: '3', precio: '10' }
+
+
+        // CALCULA EL MONTO TOTAL COMPRADO
+
+        for (let i = 0; i < productos.length; i++){
+            monto_total = monto_total + (Number(productos[i].precio) * Number(productos[i].cantidad))
+        }
+
+        // DATOS PARA EL ENVIO DEL MENSAJE
+
         const pago = {
             factura: randomCode,
             nombre: datosCliente.nombre,
             apellido: datosCliente.apellido,
             telefono: datosCliente.telefono,
             direccion: datosCliente.direccion,
-            correo: "jose.al.es301@gmail.com",
+            correo: datosCliente.correo,
             productos,
-            fecha: "25/11/23"
-
+            fecha: fechaActual
         }
-        console.log(pago)
+
+        // DATOS PARA LA COMPRA EN EL PERFIL
+
+        const pagoUser = {
+            factura: randomCode,
+            productos,
+            monto_total,
+            fecha: fechaActual
+        }
+
+        
+        // DATOS PARA TABLA DE COMPRAS
+
+        const pagoTabla = new Compras({
+            idUser: iduser,
+            nombre: datosCliente.nombre,
+            factura: randomCode,
+            productos,
+            monto_total,
+            fecha_compra: fechaActual
+        });
+
+        // AGREGA LA COMPRA A LA TABLA DE COMPRAS
+        await pagoTabla.save();
+
+        // AGREGA LA COMPRA AL PERFIL DEL USUARIO
+        await Usuario.updateOne({ _id: iduser },{ $push: { compras: pagoUser }});
+
+        // ENVIA EL CORREO DE CONFIRMACIÓN DE COMPRA
         enviarEmail(pago)
-        res.status(201).send("Habitación agregada correctamente");
+
+        res.status(201).send("Compra agregada correctamente");
       
     } catch (error) {
-      console.error("Error al agregar habitación:", error);
-      res.status(500).json({ Error: "Error al agregar habitación" });
+      console.error("Error al agregar Compra:", error);
+      res.status(500).json({ Error: "Error al agregar Compra" });
     }
   };
 

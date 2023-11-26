@@ -52,7 +52,14 @@ enviarEmail = async (pago) => {
       .header img {
           max-width: 200px;
       }
+
+      .header h1{
+        color: white;
+      }
   
+      .fecha{
+        text-align: right;
+      }
       .content {
           background-color: #ffffff;
           padding: 30px;
@@ -104,27 +111,30 @@ enviarEmail = async (pago) => {
       <div class="container">
       <div class="header">
           <img src="https://i.imgur.com/so4ClLy.png" alt="Logo">
+          <h1>¡Gracias!</h1>
       </div>
       <div class="content">
-          <h2>Confirmación de Pago</h2>
+        <p class="fecha"><b> ${pago.fecha} </b></p>
+          <h2>Confirmación de Pago Factura ${pago.factura}</h2>
           <p>Estimado ${pago.nombre} ${pago.apellido},</p>
           <p>Gracias por su compra. Nos complace confirmar que su pago ha sido procesado con éxito.</p>
           <p>A continuación, encontrará un resumen de los detalles de su pago:</p>
           <div class="payment-summary">
           <h3>Resumen del Pago</h3>
-          <table id="tabla-productos">
-          <tr>
-            <th>Descripción</th>
-            <th>Monto</th>
-            <th>Cantidad</th>
-          </tr>
-          ${productosHTML}
-          <tr>
-            <td colspan="2" style="text-align: right;"><strong>TOTAL:</strong></td>
-            <td>${totalHTML}</td>
-          </tr>
-        </table>
-          </div>
+            <table id="tabla-productos">
+            <tr>
+                <th>Descripción</th>
+                <th>Cantidad</th>
+                <th>Monto</th>
+
+            </tr>
+            ${productosHTML}
+            <tr>
+                <td colspan="2" style="text-align: right;"><strong>TOTAL:</strong></td>
+                <td>${totalHTML}</td>
+            </tr>
+            </table>
+        </div>
       </div>
       <div class="footer">
           <p>Si tiene alguna pregunta o necesita asistencia adicional, no dude en contactarnos.</p>
@@ -152,8 +162,9 @@ enviarEmail = async (pago) => {
         const rowHTML = `
             <tr>
             <td>${producto.nombreProducto}</td>
-            <td>${producto.precio}$</td>
             <td>${producto.cantidad}</td>
+            <td>${producto.precio}$</td>
+
             </tr>
         `;
         rowsHTML += rowHTML;
