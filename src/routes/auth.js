@@ -23,6 +23,10 @@ router.get("/users", controller.obtenerUsuarios)
 router.put('/users/editar/', (req, res) => {
     controller.editarUsuario(req, res);
 });
+
+router.post('/users/editar/:id', (req, res) => {
+  controller.editarUsuarioPerfil(req, res);
+});
   
 router.post("/login", login);
 
