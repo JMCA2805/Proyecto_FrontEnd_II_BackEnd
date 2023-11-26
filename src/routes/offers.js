@@ -22,5 +22,5 @@ const upload = multer({ storage: multer.memoryStorage() });
 
 router.get("/", controller.getOffers);
 router.post("/addoff", upload.single("icono"), controller.addoff);
-
+router.put("/editoff", upload.single("icono"), controller.editoff);
 module.exports = router;

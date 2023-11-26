@@ -63,7 +63,7 @@ class offersController {
   eliminarServicio = async (req, res) => {
     try {
       const servicio = req.body.servicio;
-      const ser = await Servicios.findOne({ servicio: servicio });
+      const ser = await Ofertas.findOne({ servicio: servicio });
       if (!ser) {
         return res.status(404).json({ mensaje: "servicio no encontrado" });
       }
@@ -77,30 +77,44 @@ class offersController {
     }
   };
 
-  editarServicio = async (req, res) => {
+  editoff = async (req, res) => {
     try {
-      const { viejo, servicio, descripcion } = req.body;
+      const { viejo, oferta, descripcion, icono } = req.body;
+      console.log(viejo, oferta, descripcion, icono);
 
-      const imagenBuffer = req.file.buffer;
-      const contentType = req.file.mimetype;
+      const ofertas = await Ofertas.findOne({ oferta: viejo });
 
-      const servicios = await Servicios.findOne({ servicio: viejo });
-
-      if (!servicios) {
-        return res.status(404).json({ mensaje: "Servicio no encontrado" });
+      if (!ofertas) {
+        return res.status(404).json({ mensaje: "Oferta no encontrada" });
       }
 
-      // Actualiza los datos del artículo
-      servicios.servicio = servicio;
-      servicios.descripcion = descripcion;
-      servicios.icono = { data: imagenBuffer, contentType };
+      if (icono != undefined) {
+        ofertas.oferta = oferta;
+        ofertas.descripcion = descripcion;
+        await ofertas.save();
+        return res.status(200).json({
+          mensaje: "Oferta o Descuento editado correctamente",
+        });
+      } else {
+        const imagenBuffer = req.file.buffer;
+        const contentType = req.file.mimetype;
 
-      await servicios.save();
+        // Actualiza los datos del artículo
+        ofertas.oferta = oferta;
+        ofertas.descripcion = descripcion;
+        ofertas.icono = { data: imagenBuffer, contentType };
 
-      res.json({ mensaje: "Servicio editado correctamente" });
+        await ofertas.save();
+
+        return res.status(200).json({
+          mensaje: "Oferta o Descuento editado correctamente",
+        });
+      }
     } catch (error) {
-      console.error("Error al editar el servicio:", error);
-      res.status(500).json({ mensaje: "Error al editar el servicio" });
+      console.error("Error al editar la oferta o descuento:", error);
+      res
+        .status(500)
+        .json({ mensaje: "Error al editar la oferta o descuento" });
     }
   };
 }
