@@ -34,15 +34,16 @@ const authRuta = require ("./routes/auth")
 const offersRuta = require("./routes/offers.js");
 
 const paymentRuta = require("./routes/payment");
+const carritoRuta = require("./routes/carrito.js");
+
 const articulosRuta = require("./routes/articulos.js");
-
-
 
 app.use("/", indexRuta);
 app.use("/auth", authRuta);
 app.use("/Payment", paymentRuta);
 app.use("/Offers", offersRuta);
 app.use("/articulos", articulosRuta);
+app.use("/carrito", carritoRuta);
 
 
 module.exports = app;
