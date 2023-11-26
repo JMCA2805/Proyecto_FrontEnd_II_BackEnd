@@ -35,7 +35,7 @@ const productoEsquema = new Schema({
 });
 
 
-const products = model('products', productoEsquema);
+const productos = model('productos', productoEsquema);
 
 // Exportar el modelo de usuario
-module.exports = products;
+module.exports = productos;

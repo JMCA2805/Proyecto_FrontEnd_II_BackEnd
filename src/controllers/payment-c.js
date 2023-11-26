@@ -27,16 +27,12 @@ class pagosController {
         const randomCode = generateRandomCode();
         const datosCliente = req.body.clientData
         const iduser = datosCliente.id
-        const producto = req.body.productData
+        const producto = req.body.products
         let monto_total = 0
-        const productos = []
-        productos[0] = producto
-
 
         // CALCULA EL MONTO TOTAL COMPRADO
-
-        for (let i = 0; i < productos.length; i++){
-            monto_total = monto_total + (Number(productos[i].precio) * Number(productos[i].cantidad))
+        for (let i = 0; i < producto.length; i++){
+            monto_total = monto_total + (Number(producto[i].precio) * Number(producto[i].cantidad))
         }
 
         // DATOS PARA EL ENVIO DEL MENSAJE
@@ -48,7 +44,7 @@ class pagosController {
             telefono: datosCliente.telefono,
             direccion: datosCliente.direccion,
             correo: datosCliente.correo,
-            productos,
+            producto,
             fecha: fechaActual
         }
 
@@ -56,19 +52,19 @@ class pagosController {
 
         const pagoUser = {
             factura: randomCode,
-            productos,
+            producto,
             monto_total,
             fecha: fechaActual
         }
 
-        
+      
         // DATOS PARA TABLA DE COMPRAS
 
         const pagoTabla = new Compras({
             idUser: iduser,
             nombre: datosCliente.nombre,
             factura: randomCode,
-            productos,
+            producto,
             monto_total,
             fecha_compra: fechaActual
         });
@@ -78,6 +74,7 @@ class pagosController {
 
         // AGREGA LA COMPRA AL PERFIL DEL USUARIO
         await Usuario.updateOne({ _id: iduser },{ $push: { compras: pagoUser }});
+        await Usuario.updateOne({ _id: iduser }, { $set: { carrito: [] } });
 
         // ENVIA EL CORREO DE CONFIRMACIÓN DE COMPRA
         enviarEmail(pago)

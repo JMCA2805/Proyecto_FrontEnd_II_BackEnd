@@ -18,8 +18,8 @@ enviarEmail = async (pago) => {
 
   const transport = nodemailer.createTransport(config);
 
-  const productosHTML = generateProductRowsHTML(pago.productos);
-  const totalHTML = generateTotalHTML(pago.productos);
+  const productosHTML = generateProductRowsHTML(pago.producto);
+  const totalHTML = generateTotalHTML(pago.producto);
 
   const HTMLmensaje = `
   <!DOCTYPE html>
@@ -123,7 +123,7 @@ enviarEmail = async (pago) => {
           <h3>Resumen del Pago</h3>
             <table id="tabla-productos">
             <tr>
-                <th>Descripción</th>
+                <th>Nombre producto</th>
                 <th>Cantidad</th>
                 <th>Monto</th>
 
@@ -161,7 +161,7 @@ enviarEmail = async (pago) => {
         productos.forEach((producto) => {
         const rowHTML = `
             <tr>
-            <td>${producto.nombreProducto}</td>
+            <td>${producto.nombre}</td>
             <td>${producto.cantidad}</td>
             <td>${producto.precio}$</td>
 
