@@ -60,20 +60,20 @@ class offersController {
     }
   };
 
-  eliminarServicio = async (req, res) => {
+  deloff = async (req, res) => {
     try {
-      const servicio = req.body.servicio;
-      const ser = await Ofertas.findOne({ servicio: servicio });
-      if (!ser) {
-        return res.status(404).json({ mensaje: "servicio no encontrado" });
+      const oferta = req.body.oferta;
+      const off = await Ofertas.findOne({ oferta: oferta });
+      if (!off) {
+        return res.status(404).json({ mensaje: "Oferta no encontrada" });
       }
 
-      await Servicios.deleteOne({ servicio: servicio });
+      await Ofertas.deleteOne({ oferta: oferta });
 
-      res.json({ mensaje: "Servicios eliminado correctamente" });
+      res.json({ mensaje: "Oferta o descuento eliminado correctamente" });
     } catch (error) {
-      console.error("Error al eliminar el servicio", error);
-      res.status(500).json({ mensaje: "Error al eliminar el servicio" });
+      console.error("Error al eliminar la oferta o descuento", error);
+      res.status(500).json({ mensaje: "Error al eliminar la oferta  o descuento" });
     }
   };
 
