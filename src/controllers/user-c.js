@@ -88,6 +88,23 @@ class usuariosController {
       res.status(500).json({ mensaje: 'Error al eliminar el Usuario' });
     }
   };
+
+  obtenerUsuariosId = async (req, res) => {
+    try {
+      const id = req.params.id;
+      const usuario = await Usuario.findOne({ _id: id });
+
+      if (!usuario) {
+        return res.status(404).json({ mensaje: 'Usuario no encontrado' });
+      }
+
+      res.send(usuario);
+      
+    } catch (error) {
+      console.error('Error al eliminar el Usuario', error);
+      res.status(500).json({ mensaje: 'Error al eliminar el Usuario' });
+    }
+  }
 }
 
 const usuariosC = new usuariosController();

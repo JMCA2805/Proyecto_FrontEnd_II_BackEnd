@@ -9,17 +9,6 @@ const decodetoken = require('../middlewares/decodetoken')
 
 const multer = require('multer');
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const uploadDir = path.join(__dirname, '../uploads');
-    cb(null, uploadDir);
-  },
-  filename: (req, file, cb) => {
-    console.log(file);
-    cb(null, `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`);
-  },
-});
-
 const upload = multer({ storage: multer.memoryStorage() });
 
 
@@ -50,6 +39,7 @@ router.get('/usuarioObtenido/:id', (req, res) => {
   getUserById(req, res);
 });
 
+router.get("/users/:id", controller.obtenerUsuariosId)
 
 
 module.exports = router;
