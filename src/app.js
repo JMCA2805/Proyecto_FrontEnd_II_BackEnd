@@ -31,11 +31,12 @@ app.use(express.static(path.join(__dirname, "public")));
 // ROUTES
 const indexRuta = require("./routes/index");
 const authRuta = require ("./routes/auth")
-
-const paymentRuta = require("./routes/payment");
+const authRuta = require ("./routes/auth")
+const offersRuta = require("./routes/offers.js");
 
 app.use("/", indexRuta);
 app.use("/auth", authRuta);
 app.use("/Payment", paymentRuta);
+app.use("/Offers", offersRuta);
 
 module.exports = app;
