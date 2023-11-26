@@ -32,8 +32,10 @@ app.use(express.static(path.join(__dirname, "public")));
 const indexRuta = require("./routes/index");
 const authRuta = require ("./routes/auth")
 
+const paymentRuta = require("./routes/payment");
+
 app.use("/", indexRuta);
 app.use("/auth", authRuta);
-
+app.use("/Payment", paymentRuta);
 
 module.exports = app;

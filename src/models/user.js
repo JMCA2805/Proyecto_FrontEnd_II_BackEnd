@@ -8,6 +8,11 @@ const UsuarioSchema = new Schema({
   descripcion: { type: String },
   telefono: {type: Number},
 
+  favoritos: {type: Array},
+  carrito: {type: Array},
+  compras: {type: Array},
+
+  imagen: {data: Buffer, contentType: String },
   rol: {type: String, required: true}
 });
 

@@ -21,7 +21,11 @@ const register = async (req, res) => {
             rol: 'usuario',
             imagen: {data: null, contentType: ""},
             telefono: null,
-            descripcion: ""
+            descripcion: "",
+
+            favoritos: [],
+            carrito: [],
+            compras: []
           });
 
           nuevoUsuario
