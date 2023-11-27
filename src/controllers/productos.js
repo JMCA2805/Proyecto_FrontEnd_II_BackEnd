@@ -1,5 +1,5 @@
 const { json } = require('body-parser');
-const products = require('../models/products');
+const products   = require('../models/products');
 const Usuario = require("../models/user.js");
 
 class productosController {
