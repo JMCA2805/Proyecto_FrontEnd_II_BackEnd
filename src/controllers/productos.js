@@ -5,8 +5,10 @@ const Usuario = require("../models/user.js");
 class productosController {
   obtenerProductos = async (req, res) => {
     try {
-
+      const idUser = req.params.id
       const productoscom = await products.find();
+      console.log(idUser)
+
       let imagenCompleta
       let data
       let productos2 = []
@@ -37,6 +39,69 @@ class productosController {
       res.status(500).json({ Error: 'Error al obtener productos' });
     }
   };
+
+  agregarCarrito = async (req, res) => {
+    try {
+
+      const idUser = req.params.id
+      const action = req.body.accion
+      const { serial, nombre, descripcion, precio } = req.body;
+
+      if (action === 'agregar') {
+        try {
+          // Busca al usuario por su idUser
+          const usuario = await Usuario.findOne({ _id: idUser });
+    
+          if (usuario) {
+            // Agrega el serial al arreglo de favoritos
+
+            const existeSerial = usuario.carrito.includes({serial, nombre, descripcion, precio});
+            
+            if (existeSerial) {
+              return
+            }
+
+            usuario.carrito.push({serial, nombre, descripcion, precio, cantidad: ''});
+    
+            // Guarda los cambios en el usuario
+            await usuario.save();
+          } 
+        } catch (error) {
+          return res.status(500).json({
+            message: 'Error al agregar el producto a favoritos',
+            error: error.message
+          });
+        }
+      } else if (action === 'eliminar') {
+        try {
+          // Busca al usuario por su idUser
+          const usuario = await Usuario.findOne({ _id: idUser });
+        
+          if (usuario) {
+            // Verifica si el producto está en la lista de carrito
+            const index = usuario.carrito.findIndex((item) => item.serial === serial);
+            if (index > -1) {
+              // Elimina el producto de la lista de carrito
+              usuario.carrito.splice(index, 1);
+        
+              // Guarda los cambios en el usuario
+              await usuario.save();
+            }
+          }
+        } catch (error) {
+          return res.status(500).json({
+            message: 'Error al eliminar el producto de favoritos',
+            error: error.message
+          });
+        }
+      }
+
+      res.status(200).send('Si pasa');
+    } catch (error) {
+      res.status(500).json({ Error: 'Error al obtener productos' });
+    }
+  }
+
 
   agregarProductos = async (req, res) => {
     try {

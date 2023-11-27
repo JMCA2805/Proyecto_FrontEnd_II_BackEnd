@@ -5,25 +5,18 @@ const controller = require('../controllers/productos');
 
 const multer = require('multer');
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const uploadDir = path.join(__dirname, '../uploads');
-    cb(null, uploadDir);
-  },
-  filename: (req, file, cb) => {
-    console.log(file);
-    cb(null, `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`);
-  },
-});
-
 const upload = multer({ storage: multer.memoryStorage() });
 
-router.get('/', (req, res) => {
+router.get('/:id', (req, res) => {
   controller.obtenerProductos(req, res);
 });
 
 router.post('/', upload.single('imagen'), (req, res) => {
   controller.agregarProductos(req, res);
+});
+
+router.post('/:id', (req, res) => {
+  controller.agregarCarrito(req, res);
 });
 
 router.delete('/', (req, res) => {
