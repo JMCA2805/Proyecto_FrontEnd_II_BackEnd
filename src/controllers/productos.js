@@ -228,19 +228,52 @@ class productosController {
 
   editarProducto = async (req, res) => {
     try {
-      const { serial, datosActualizados } = req.body;
-      const producto = await products.findOne({ serial });
+      const { serialviejo, serial, nombre, descripcion, cantidad, precio, categoria } = req.body;
+      console.log(req.body)
+  
+      const imagenBuffer = req.file ? req.file.buffer : undefined;
+      const contentType = req.file ? req.file.mimetype : undefined;
+  
+      const producto = await products.findOne({ serial: serialviejo });
+  
       if (!producto) {
-        return res.status(404).json({ mensaje: 'Producto no encontrado' });
+        return res.status(404).json({ mensaje: "Producto no encontrado" });
       }
-
-      await products.findOneAndUpdate({ serial },datosActualizados,{ new: true })
-
-      res.json({ mensaje: 'Producto editado correctamente' });
-      
+  
+      // Elimina la imagen existente del sistema de archivos
+  
+      // Actualiza los datos del producto
+      if (serial) {
+        producto.serial = serial;
+      }
+      if (nombre) {
+        producto.nombre = nombre;
+      }
+      if (descripcion) {
+        producto.descripcion = descripcion;
+      }
+      if (cantidad) {
+        producto.cantidad = cantidad;
+      }
+      if (precio) {
+        producto.precio = precio;
+      }
+      if (categoria) {
+        producto.categoria = categoria;
+      }
+      if (imagenBuffer && contentType) {
+        producto.imagen = { data: imagenBuffer, contentType };
+      }
+  
+      await producto.save();
+  
+      const imagenCompleta =
+        "data:" + producto.imagen.contentType + ";base64," + producto.imagen.data.toString("base64");
+  
+      res.json({ mensaje: "Producto editado correctamente", imagen: imagenCompleta });
     } catch (error) {
-      console.error('Error al editae el producto:', error);
-      res.status(500).json({ mensaje: 'Error al editar el producto' });
+      console.error("Error al editar el producto", error);
+      res.status(500).json({ mensaje: "Error al editar el producto" });
     }
   };
 }

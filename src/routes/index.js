@@ -30,7 +30,7 @@ router.delete('/', (req, res) => {
   controller.eliminarProducto(req, res);
 });
 
-router.put('/', (req, res) => {
+router.put('/', upload.single('imagen'), (req, res) => {
   controller.editarProducto(req, res);
 });
 
