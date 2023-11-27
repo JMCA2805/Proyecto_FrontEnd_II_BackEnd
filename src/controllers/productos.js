@@ -1,29 +1,29 @@
 const { json } = require('body-parser');
-const products = require('../models/products');
+const productos = require('../models/products');
 const Usuario = require("../models/user.js");
-
-const sharp = require('sharp');
-const { Binary } = require('mongodb');
 
 class productosController {
   obtenerProductos = async (req, res) => {
-    console.log(req.query)
     try {
-      const productoscom = await products.find();
+
+      const productoscom = await productos.find();
       let imagenCompleta
       let data
-      let productos = []
+      let productos2 = []
 
       for(let i = 0; i<productoscom.length;i++){
 
-       
-        productos[i] = {
+        data = productoscom[i].imagen.data
+        imagenCompleta = 'data:'+productoscom[i].imagen.contentType+";base64,"+data.toString('base64')
+
+        productos2[i] = {
           serial: productoscom[i].serial,
           nombre: productoscom[i].nombre,
           descripcion: productoscom[i].descripcion,
           cantidad: productoscom[i].cantidad,
           precio: productoscom[i].precio,
-          categoria: productoscom[i].categoria
+          categoria: productoscom[i].categoria,
+          imagen: imagenCompleta,
   
         }
       }
@@ -31,7 +31,7 @@ class productosController {
       if (productos.length === 0) {
         res.status(200).send('No hay productos en la Base de Datos');
       } else {
-        res.status(200).json(productos);
+        res.status(200).json(productos2);
       }
     } catch (error) {
       res.status(500).json({ Error: 'Error al obtener productos' });
@@ -55,7 +55,7 @@ class productosController {
           }
     
           var regex = new RegExp('.*' + RegExp.escape(nombre) + '.*', 'i');
-          const productoscom = await products.find({nombre: regex});
+          const productoscom = await productos.find({nombre: regex});
     
     
           for(let i = 0; i<productoscom.length;i++){
@@ -81,7 +81,7 @@ class productosController {
 
           const categoria = req.body.categoria
 
-          const productoscom = await products.find({categoria: categoria});
+          const productoscom = await productos.find({categoria: categoria});
 
           for(let i = 0; i<productoscom.length;i++){
     
@@ -163,12 +163,12 @@ class productosController {
         const imagenBuffer = req.file.buffer;
         const contentType = req.file.mimetype;
         
-        const serialEquipos = await products.findOne({ serial });
+        const serialEquipos = await productos.findOne({ serial });
   
         if (serialEquipos) {
           res.status(400).send('Serial de equipo ya registrado');
         } else {
-          const nuevoproducto = new products({
+          const nuevoproducto = new productos({
             serial,
             nombre,
             descripcion,
@@ -193,7 +193,7 @@ class productosController {
     try {
 
         const serial = req.params.serial;
-        const productos = await products.findById(serial);
+        const productos = await productos.findById(serial);
 
 
         if (productos == ''){
@@ -211,12 +211,12 @@ class productosController {
     try {
       const serial = req.body.serial;
 
-      const producto = await products.findOne({ serial });
+      const producto = await productos.findOne({ serial });
       if (!producto) {
         return res.status(404).json({ mensaje: 'Producto no encontrado' });
       }
 
-      await products.deleteOne({'serial': serial});
+      await productos.deleteOne({'serial': serial});
 
       res.json({ mensaje: 'Producto eliminado correctamente' });
       
@@ -230,12 +230,12 @@ class productosController {
   editarProducto = async (req, res) => {
     try {
       const { serial, datosActualizados } = req.body;
-      const producto = await products.findOne({ serial });
+      const producto = await productos.findOne({ serial });
       if (!producto) {
         return res.status(404).json({ mensaje: 'Producto no encontrado' });
       }
 
-      await products.findOneAndUpdate({ serial },datosActualizados,{ new: true })
+      await productos.findOneAndUpdate({ serial },datosActualizados,{ new: true })
 
       res.json({ mensaje: 'Producto editado correctamente' });
       
