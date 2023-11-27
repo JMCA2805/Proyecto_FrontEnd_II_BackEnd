@@ -1,12 +1,12 @@
 const { json } = require('body-parser');
-const productos = require('../models/products');
+const products = require('../models/products');
 const Usuario = require("../models/user.js");
 
 class productosController {
   obtenerProductos = async (req, res) => {
     try {
 
-      const productoscom = await productos.find();
+      const productoscom = await products.find();
       let imagenCompleta
       let data
       let productos2 = []
@@ -28,7 +28,7 @@ class productosController {
         }
       }
 
-      if (productos.length === 0) {
+      if (products.length === 0) {
         res.status(200).send('No hay productos en la Base de Datos');
       } else {
         res.status(200).json(productos2);
@@ -55,7 +55,7 @@ class productosController {
           }
     
           var regex = new RegExp('.*' + RegExp.escape(nombre) + '.*', 'i');
-          const productoscom = await productos.find({nombre: regex});
+          const productoscom = await products.find({nombre: regex});
     
     
           for(let i = 0; i<productoscom.length;i++){
@@ -69,8 +69,8 @@ class productosController {
               descripcion: productoscom[i].descripcion,
               cantidad: productoscom[i].cantidad,
               precio: productoscom[i].precio,
-              categoria: productoscom[i].categoria//,
-            //   imagen: imagenCompleta,
+              categoria: productoscom[i].categoria,
+              imagen: imagenCompleta,
       
             }
           }
@@ -81,7 +81,7 @@ class productosController {
 
           const categoria = req.body.categoria
 
-          const productoscom = await productos.find({categoria: categoria});
+          const productoscom = await products.find({categoria: categoria});
 
           for(let i = 0; i<productoscom.length;i++){
     
@@ -102,7 +102,6 @@ class productosController {
 
           res.status(200).json(productos);
         }
-
 
       }else if((req.body.nombreBoton == 'Favorito')){
 
@@ -163,12 +162,12 @@ class productosController {
         const imagenBuffer = req.file.buffer;
         const contentType = req.file.mimetype;
         
-        const serialEquipos = await productos.findOne({ serial });
+        const serialEquipos = await products.findOne({ serial });
   
         if (serialEquipos) {
           res.status(400).send('Serial de equipo ya registrado');
         } else {
-          const nuevoproducto = new productos({
+          const nuevoproducto = new products({
             serial,
             nombre,
             descripcion,
@@ -191,9 +190,9 @@ class productosController {
   
   busquedaProductos = async (req, res) => {
     try {
-
         const serial = req.params.serial;
         const productos = await productos.findById(serial);
+
 
 
         if (productos == ''){
@@ -211,12 +210,12 @@ class productosController {
     try {
       const serial = req.body.serial;
 
-      const producto = await productos.findOne({ serial });
+      const producto = await products.findOne({ serial });
       if (!producto) {
         return res.status(404).json({ mensaje: 'Producto no encontrado' });
       }
 
-      await productos.deleteOne({'serial': serial});
+      await products.deleteOne({'serial': serial});
 
       res.json({ mensaje: 'Producto eliminado correctamente' });
       
@@ -230,12 +229,12 @@ class productosController {
   editarProducto = async (req, res) => {
     try {
       const { serial, datosActualizados } = req.body;
-      const producto = await productos.findOne({ serial });
+      const producto = await products.findOne({ serial });
       if (!producto) {
         return res.status(404).json({ mensaje: 'Producto no encontrado' });
       }
 
-      await productos.findOneAndUpdate({ serial },datosActualizados,{ new: true })
+      await products.findOneAndUpdate({ serial },datosActualizados,{ new: true })
 
       res.json({ mensaje: 'Producto editado correctamente' });
       
