@@ -57,7 +57,6 @@ class productosController {
     
           }
         }
-        console.log(productos2)
       }
 
   
