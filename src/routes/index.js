@@ -7,6 +7,10 @@ const multer = require('multer');
 
 const upload = multer({ storage: multer.memoryStorage() });
 
+router.get('/productos/:id', (req, res) => {
+  controller.obtenerProductos(req, res);
+});
+
 router.get('/productos', (req, res) => {
   controller.obtenerProductos(req, res);
 });
