@@ -1,13 +1,19 @@
 const { json } = require('body-parser');
 const products   = require('../models/products');
 const Usuario = require("../models/user.js");
+const jwt = require('jsonwebtoken')
 
 class productosController {
   obtenerProductos = async (req, res) => {
     try {
-      const idUser = req.params.id
+      const token = req.cookies.token;
+      const decoded = jwt.decode(token);
+      const idUser = decoded.id;
+
       const productoscom = await products.find();
-      console.log(idUser)
+
+      const usuario = await Usuario.findOne({ _id: idUser });
+      const carrito = usuario.carrito
 
       let imagenCompleta
       let data
@@ -18,18 +24,49 @@ class productosController {
         data = productoscom[i].imagen.data
         imagenCompleta = 'data:'+productoscom[i].imagen.contentType+";base64,"+data.toString('base64')
 
-        productos2[i] = {
-          serial: productoscom[i].serial,
-          nombre: productoscom[i].nombre,
-          descripcion: productoscom[i].descripcion,
-          cantidad: productoscom[i].cantidad,
-          precio: productoscom[i].precio,
-          categoria: productoscom[i].categoria,
-          imagen: imagenCompleta,
-  
+        if(carrito.length > 0){
+
+          for(let j = 0; j<carrito.length;j++){
+
+            if(productoscom[i].serial == carrito[j].serial){
+
+              productos2[i] = {
+                serial: productoscom[i].serial,
+                nombre: productoscom[i].nombre,
+                descripcion: productoscom[i].descripcion,
+                cantidad: productoscom[i].cantidad,
+                precio: productoscom[i].precio,
+                categoria: productoscom[i].categoria,
+                imagen: imagenCompleta,
+                carrito: true
+              }
+            }else{
+                productos2[i] = {
+                  serial: productoscom[i].serial,
+                  nombre: productoscom[i].nombre,
+                  descripcion: productoscom[i].descripcion,
+                  cantidad: productoscom[i].cantidad,
+                  precio: productoscom[i].precio,
+                  categoria: productoscom[i].categoria,
+                  imagen: imagenCompleta,
+                  carrito: false
+                }
+                
+              }
+            }
+        }else{
+          productos2[i] = {
+            serial: productoscom[i].serial,
+            nombre: productoscom[i].nombre,
+            descripcion: productoscom[i].descripcion,
+            cantidad: productoscom[i].cantidad,
+            precio: productoscom[i].precio,
+            categoria: productoscom[i].categoria,
+            imagen: imagenCompleta,
+            carrito: false
+          }
         }
       }
-
       if (products.length === 0) {
         res.status(200).send('No hay productos en la Base de Datos');
       } else {
@@ -44,7 +81,6 @@ class productosController {
     try {
 
       const idUser = req.params.id
-      console.log(idUser)
       const action = req.body.accion
       const { serial, nombre, descripcion, precio } = req.body;
 
