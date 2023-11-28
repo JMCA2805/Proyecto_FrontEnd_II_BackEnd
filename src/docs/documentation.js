@@ -174,3 +174,123 @@
  *       400:
  *         description: La oferta o decuento no existe
  */
+
+
+
+
+
+
+//Esquema de Datos de Ofertas y descuentos
+
+//get schema
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     login:
+ *       type: object
+ *       properties:
+ *         correo:
+ *           type: string
+ *           description: Correo para iniciar sesion
+ *         contraseña:
+ *           type: string
+ *           description: Password para iniciar sesion
+ *       example:
+ *         correo: "yetzeniam7@gmail.com"
+ *         contraseña: "S1ncero."
+ */
+
+//get
+
+/**
+ * @swagger
+ * /auth/users/:
+ *   get:
+ *     summary: Iniciar sesion
+ *     tags: [Usuarios]
+ *     responses:
+ *       200:
+ *         description: Usuario logeado correctamente"
+ *       400:
+ *         description: Contraseña incorrecta
+ */
+
+// POST schema
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Register:
+ *       type: object
+ *       properties:
+ *         nombre:
+ *           type: string
+ *           description: Ingrese su nombre
+ *         apellido:
+ *           type: string
+ *           description: Ingrese su apellido
+ *         correo:
+ *           type: string
+ *           description: Ingrese su correo
+ *         contraseña:
+ *           type: string
+ *           description: Ingrese su contraseña
+ *       required:
+ *         -correo
+ *         -contraseña
+ *       example:
+ *         nombre: "Yetzenia"
+ *         apellido: "Mendoza"
+ *         correo: "yetzenia@gmail.com"
+ *         contraseña: "1234"
+ */
+
+/**
+ * @swagger
+ * /auth/register/:
+ *   post:
+ *     summary: Registrar un usuario
+ *     tags: [Usuarios]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             $ref: '#/components/schemas/Register'
+ *     responses:
+ *       200:
+ *         description: Usuario Creado
+ *       400:
+ *         description: Verifique su información
+ */
+
+//put schema
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Ofertas_Actualizar:
+ *       type: object
+ *       properties:
+ *         viejo:
+ *           type: string
+ *           description: Nombre de la oferta o Descuento a actualizar
+ *         icono:
+ *           type: string
+ *           description: Imagen de la oferta o descuento nuevo (Buffer - String)
+ *         oferta:
+ *           type: string
+ *           description: Nombre de la oferta o Descuento nuevo
+ *         descripcion:
+ *           type: string
+ *           description: Descripcion de la oferta o descuento nuevo
+ *       example:
+ *         viejo: "Descuento del 20% en ordenadores portátiles "
+ *         icono: "data:codigo de la imagen en bite"
+ *         oferta: "Descuento del 15% en ordenadores portátiles"
+ *         descripcion: "Ahorra un 15% en la compra de cualquier ordenador portátil de nuestra "
+ */
