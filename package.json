@@ -6,7 +6,6 @@
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",
     "tests": "jest"
-
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
@@ -28,7 +27,9 @@
     "node-cron": "^3.0.3",
     "nodemailer": "^6.9.7",
     "path": "^0.12.7",
-    "sharp": "^0.32.6"
+    "sharp": "^0.32.6",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.0"
   },
   "devDependencies": {
     "jest": "^29.7.0",
