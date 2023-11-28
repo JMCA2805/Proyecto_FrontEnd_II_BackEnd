@@ -9,65 +9,30 @@ class productosController {
       const token = req.cookies.token;
       const decoded = jwt.decode(token);
       const idUser = decoded.id;
-
+  
       const productoscom = await products.find();
-
       const usuario = await Usuario.findOne({ _id: idUser });
-      const carrito = usuario.carrito
-
-      let imagenCompleta
-      let data
-      let productos2 = []
-
-      for(let i = 0; i<productoscom.length;i++){
-
-        data = productoscom[i].imagen.data
-        imagenCompleta = 'data:'+productoscom[i].imagen.contentType+";base64,"+data.toString('base64')
-
-        if(carrito.length > 0){
-
-          for(let j = 0; j<carrito.length;j++){
-
-            if(productoscom[i].serial == carrito[j].serial){
-
-              productos2[i] = {
-                serial: productoscom[i].serial,
-                nombre: productoscom[i].nombre,
-                descripcion: productoscom[i].descripcion,
-                cantidad: productoscom[i].cantidad,
-                precio: productoscom[i].precio,
-                categoria: productoscom[i].categoria,
-                imagen: imagenCompleta,
-                carrito: true
-              }
-            }else{
-                productos2[i] = {
-                  serial: productoscom[i].serial,
-                  nombre: productoscom[i].nombre,
-                  descripcion: productoscom[i].descripcion,
-                  cantidad: productoscom[i].cantidad,
-                  precio: productoscom[i].precio,
-                  categoria: productoscom[i].categoria,
-                  imagen: imagenCompleta,
-                  carrito: false
-                }
-                
-              }
-            }
-        }else{
-          productos2[i] = {
-            serial: productoscom[i].serial,
-            nombre: productoscom[i].nombre,
-            descripcion: productoscom[i].descripcion,
-            cantidad: productoscom[i].cantidad,
-            precio: productoscom[i].precio,
-            categoria: productoscom[i].categoria,
-            imagen: imagenCompleta,
-            carrito: false
-          }
-        }
-      }
-      if (products.length === 0) {
+      const carrito = usuario.carrito;
+  
+      const productos2 = productoscom.map(producto => {
+        const data = producto.imagen.data;
+        const imagenCompleta = 'data:' + producto.imagen.contentType + ';base64,' + data.toString('base64');
+  
+        const isInCart = carrito.some(item => item.serial === producto.serial);
+  
+        return {
+          serial: producto.serial,
+          nombre: producto.nombre,
+          descripcion: producto.descripcion,
+          cantidad: producto.cantidad,
+          precio: producto.precio,
+          categoria: producto.categoria,
+          imagen: imagenCompleta,
+          carrito: isInCart
+        };
+      });
+  
+      if (productoscom.length === 0) {
         res.status(200).send('No hay productos en la Base de Datos');
       } else {
         res.status(200).json(productos2);
