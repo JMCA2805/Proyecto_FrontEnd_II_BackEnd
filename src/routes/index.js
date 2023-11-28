@@ -7,7 +7,7 @@ const multer = require('multer');
 
 const upload = multer({ storage: multer.memoryStorage() });
 
-router.get('/:id', (req, res) => {
+router.get('/productos/:id', (req, res) => {
   controller.obtenerProductos(req, res);
 });
 
@@ -15,7 +15,7 @@ router.post('/', upload.single('imagen'), (req, res) => {
   controller.agregarProductos(req, res);
 });
 
-router.post('/:id', (req, res) => {
+router.post('/productos/:id', (req, res) => {
   controller.agregarCarrito(req, res);
 });
 
