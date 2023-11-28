@@ -11,7 +11,7 @@ router.get('/productos/:id', (req, res) => {
   controller.obtenerProductos(req, res);
 });
 
-router.post('/', upload.single('imagen'), (req, res) => {
+router.post('/productos', upload.single('imagen'), (req, res) => {
   controller.agregarProductos(req, res);
 });
 
@@ -19,11 +19,11 @@ router.post('/productos/:id', (req, res) => {
   controller.agregarCarrito(req, res);
 });
 
-router.delete('/', (req, res) => {
+router.delete('/productos', (req, res) => {
   controller.eliminarProducto(req, res);
 });
 
-router.put('/', upload.single('imagen'), (req, res) => {
+router.put('/productos', upload.single('imagen'), (req, res) => {
   controller.editarProducto(req, res);
 });
 

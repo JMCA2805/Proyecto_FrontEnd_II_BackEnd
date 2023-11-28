@@ -44,6 +44,7 @@ class productosController {
     try {
 
       const idUser = req.params.id
+      console.log(idUser)
       const action = req.body.accion
       const { serial, nombre, descripcion, precio } = req.body;
 
