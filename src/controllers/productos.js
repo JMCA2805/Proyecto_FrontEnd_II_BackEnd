@@ -7,30 +7,59 @@ class productosController {
   obtenerProductos = async (req, res) => {
     try {
       const token = req.cookies.token;
-      const decoded = jwt.decode(token);
-      const idUser = decoded.id;
-  
+      let decoded
+      let idUser
+        if(token){
+          decoded = jwt.decode(token);
+          idUser = decoded.id;
+        }
+
       const productoscom = await products.find();
-      const usuario = await Usuario.findOne({ _id: idUser });
-      const carrito = usuario.carrito;
+      let productos2 = []
+
+      if(idUser){
+        const usuario = await Usuario.findOne({ _id: idUser });
+        const carrito = usuario.carrito;
+    
+          productos2 = productoscom.map(producto => {
+          const data = producto.imagen.data;
+          const imagenCompleta = 'data:' + producto.imagen.contentType + ';base64,' + data.toString('base64');
+    
+          const isInCart = carrito.some(item => item.serial === producto.serial);
+    
+          return {
+            serial: producto.serial,
+            nombre: producto.nombre,
+            descripcion: producto.descripcion,
+            cantidad: producto.cantidad,
+            precio: producto.precio,
+            categoria: producto.categoria,
+            imagen: imagenCompleta,
+            carrito: isInCart
+          };
+        });
+      }else{
+
+        for(let i = 0; i<productoscom.length;i++){
+
+          const data = productoscom[i].imagen.data
+          const imagenCompleta = 'data:'+productoscom[i].imagen.contentType+";base64,"+data.toString('base64')
   
-      const productos2 = productoscom.map(producto => {
-        const data = producto.imagen.data;
-        const imagenCompleta = 'data:' + producto.imagen.contentType + ';base64,' + data.toString('base64');
-  
-        const isInCart = carrito.some(item => item.serial === producto.serial);
-  
-        return {
-          serial: producto.serial,
-          nombre: producto.nombre,
-          descripcion: producto.descripcion,
-          cantidad: producto.cantidad,
-          precio: producto.precio,
-          categoria: producto.categoria,
-          imagen: imagenCompleta,
-          carrito: isInCart
-        };
-      });
+          productos2[i] = {
+            serial: productoscom[i].serial,
+            nombre: productoscom[i].nombre,
+            descripcion: productoscom[i].descripcion,
+            cantidad: productoscom[i].cantidad,
+            precio: productoscom[i].precio,
+            categoria: productoscom[i].categoria,
+            imagen: imagenCompleta,
+            carrito: false
+    
+          }
+        }
+        console.log(productos2)
+      }
+
   
       if (productoscom.length === 0) {
         res.status(200).send('No hay productos en la Base de Datos');
