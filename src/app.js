@@ -36,7 +36,7 @@ const reseñasRuta = require("./routes/reseñas.js");
 
 const paymentRuta = require("./routes/payment");
 const carritoRuta = require("./routes/carrito.js");
-
+const comentariosRuta = require("./routes/comentarios");
 const articulosRuta = require("./routes/articulos.js");
 
 app.use("/", indexRuta);
@@ -46,6 +46,7 @@ app.use("/Payment", paymentRuta);
 app.use("/Offers", offersRuta);
 app.use("/articulos", articulosRuta);
 app.use("/carrito", carritoRuta);
+app.use("/comentarios", comentariosRuta);
 
 
 module.exports = app;
