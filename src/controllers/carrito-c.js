@@ -4,6 +4,8 @@ const productos = require("../models/products.js");
 class carritoController {
   // Controlador para guardar una nuevo pago
   consultarCarrito = async (req, res) => {
+
+    let preciototal = 0
     try {
 
       //const { serial, action } = req.body;
@@ -29,12 +31,18 @@ class carritoController {
           nombre: producto[0].nombre,
           descripcion: producto[0].descripcion,
           precio: producto[0].precio,
-          cantidad: producto[0].cantidad,
+          cantidad: carritoUsuario[i].cantidad,
           imagen: imagenCompleta
+        }
+
+        if(carritoUsuario[i].cantidad){
+          preciototal = preciototal + (Number(producto[0].precio) * Number(carritoUsuario[i].cantidad))
+        }else{
+          preciototal = preciototal + Number(producto[0].precio)
         }
       }
 
-        res.status(201).send(carrito);
+        res.status(201).send({carrito, preciototal});
       
     } catch (error) {
       console.error("Error al consultar Carrito:", error);
@@ -70,7 +78,7 @@ class carritoController {
         }
       }
 
-
+      console.log(carritoUpdate)
       await Usuario.updateOne({ _id: datos.user }, { $set: { carrito: carritoUpdate } });
 
         res.status(201).send('gracias');

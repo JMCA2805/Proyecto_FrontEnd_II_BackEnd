@@ -77,7 +77,11 @@ class pagosController {
         await Usuario.updateOne({ _id: iduser }, { $set: { carrito: [] } });
 
         // ENVIA EL CORREO DE CONFIRMACIÓN DE COMPRA
-        enviarEmail(pago)
+        try{
+          enviarEmail(pago)
+        } catch (error){
+          console.log('Upss... Ocurrio algo en al enviar el correo', error)
+        }
 
         res.status(201).send("Compra agregada correctamente");
       
