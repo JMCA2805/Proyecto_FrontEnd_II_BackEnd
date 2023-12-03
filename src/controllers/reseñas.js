@@ -31,17 +31,6 @@ const agregarReseña = async (req, res) => {
   }
 };
 
-const getReseñas = async (req, res) => {
-  try {
-    const getComentarios = await Reseñas.find({})
-      .sort({ _id: -1 })
-      .limit(5);
-    res.status(200).json(getComentarios);
-  } catch (error) {
-    res.status(500).send({ Error: "Error al obtener las reseñas" });
-  }
-};
-
 const filReseñaProd = async (req, res) => {
   const { serial } = req.body;
   try {
@@ -73,4 +62,63 @@ const filReseñaProd = async (req, res) => {
 };
 
 
-module.exports = { agregarComentario: agregarReseña, getComentario: getReseñas, filReseñaProd };
+const agregarReseñaArticulo = async (req, res) => {
+  try {
+    const { tipo, nombre, comentario, articulonombre, userid } = req.body;
+    console.log(articulonombre)
+
+    const cmntr = {
+      tipo,
+      nombre,
+      comentario,
+      productonombre: articulonombre,
+      userid
+    };
+
+    if (!comentario) {
+      res.status(500).send({ Error: "Porfavor ingrese un comentario" });
+      return;
+    }
+    const nuevoComentario = new Reseñas(cmntr);
+
+    nuevoComentario.save();
+
+    res.status(200).send({ message: "¡Reseña Enviada con Exito!" });
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).send({ Error: "Error al eviar la reseña" });
+  }
+};
+
+const filReseñaArt = async (req, res) => {
+  const { titulo, tipo } = req.body;
+  console.log(titulo)
+  try {
+    const getComentarios = await Reseñas.find({
+      productonombre: titulo,
+      tipo: "articulo",
+    });
+
+    for (const comentario of getComentarios) {
+      const usuario = await Usuario.findById(comentario.userid);
+
+      // Extracción de la imagen
+      const imagenCompleta =
+        "data:" +
+        usuario.imagen.contentType +
+        ";base64," +
+        usuario.imagen.data.toString("base64");
+
+      // Actualización del comentario con la imagen
+      comentario.imagenUser = imagenCompleta;
+    }
+
+    res.status(200).json(getComentarios);
+  } catch (error) {
+    res.status(500).send({ Error: "Error al obtener las reseñas" });
+  }
+};
+
+
+module.exports = { agregarReseña, agregarReseñaArticulo, filReseñaProd, filReseñaArt };

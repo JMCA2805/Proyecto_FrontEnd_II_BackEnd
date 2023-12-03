@@ -2,7 +2,7 @@ const { model, Schema } = require("mongoose");
 
 const ReseñasSchema = new Schema({
   tipo: { type: String, required: true },
-  productoid: { type: String, required: true },
+  productoid: { type: String },
   productonombre: { type: String, required: true },
   nombre: { type: String, required: true },
   userid: { type: String, required: true },
