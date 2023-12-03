@@ -16,6 +16,7 @@ class usuariosController {
           telefono: usuariosCompletos[i].telefono,
         };
 
+
         usuarios.push(usuario);
       }
 
