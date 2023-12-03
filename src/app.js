@@ -32,6 +32,7 @@ app.use(express.static(path.join(__dirname, "public")));
 const indexRuta = require("./routes/index");
 const authRuta = require ("./routes/auth")
 const offersRuta = require("./routes/offers.js");
+const reseñasRuta = require("./routes/reseñas.js");
 
 const paymentRuta = require("./routes/payment");
 const carritoRuta = require("./routes/carrito.js");
@@ -40,6 +41,7 @@ const articulosRuta = require("./routes/articulos.js");
 
 app.use("/", indexRuta);
 app.use("/auth", authRuta);
+app.use("/resenas", reseñasRuta)
 app.use("/Payment", paymentRuta);
 app.use("/Offers", offersRuta);
 app.use("/articulos", articulosRuta);
