@@ -7,8 +7,6 @@ const UsuarioSchema = new Schema({
   contraseña: { type: String, required: true },
   descripcion: { type: String },
   telefono: {type: Number},
-
-  favoritos: {type: Array},
   carrito: {type: Array},
   compras: {type: Array},
 

@@ -22,8 +22,6 @@ const register = async (req, res) => {
             imagen: {data: null, contentType: ""},
             telefono: null,
             descripcion: "",
-
-            favoritos: [],
             carrito: [],
             compras: []
           });
