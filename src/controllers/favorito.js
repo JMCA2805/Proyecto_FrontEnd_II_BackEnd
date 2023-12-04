@@ -29,10 +29,15 @@ const Add_Fav = async (req, res) => {
   }
  };
 
-const Fav_List = async (req, res) => {
+ const Fav_List = async (req, res) => {
   try {
-    const items = await model.find();
-    res.status(200).json(items);
+    const userId = req.params.user_id; // Asegúrate de que 'user_id' sea el nombre correcto del parámetro
+    const items = await model.find({ usuario: userId });
+    if (items.length > 0) {
+      res.status(200).json(items);
+    } else {
+      res.status(404).json({ message: "No se encontraron productos favoritos para este usuario", status: 404 });
+    }
   } catch (error) {
     console.log("Error:", error);
     res
@@ -40,6 +45,7 @@ const Fav_List = async (req, res) => {
       .json({ message: "Error al intentar listar los Productos añadidos a favoritos", status: 500 });
   }
 };
+
 
 const Del_Fav = async(req, res) =>{
    //Se recibe el valor de id como parametro.

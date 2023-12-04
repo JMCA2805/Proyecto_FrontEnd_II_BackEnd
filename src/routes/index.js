@@ -36,7 +36,7 @@ router.put('/productos', upload.single('imagen'), (req, res) => {
 router.post('/favorito/', (req, res) => {
   favorito.Add_Fav(req, res);
 });
-router.get('/favorito/', (req, res) => {
+router.get('/favorito/:user_id', (req, res) => {
   favorito.Fav_List(req, res);
 });
 
